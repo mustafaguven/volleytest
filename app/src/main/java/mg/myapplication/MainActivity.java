@@ -92,25 +92,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 // the response is already constructed as a JSONObject!
-                try {
-                    Log.e("SENDREQUEST", type + " " + response.getString("success") + " " + url);
-                } catch (JSONException e) {
-                    Log.e("SENDREQUEST", type + " " + e.getMessage() + " " + url);
-                }
+
                 switch (type) {
                     case LOGIN:
                         try {
                             sessionId = response.getString("SessionObject");
+                            Log.e("SENDREQUEST - LOGIN", type + " " + response.getString("Success") + " " + url);
                             getCustomerInfo();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         break;
                     case CUSTOMER_INFO:
+                        try {
+                            Log.e("SENDREQUEST - CUS_INFO", response.getString("CustomerInfo") + " " + url);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         getBasketCount();
                         break;
                     case BASKET_COUNT:
                         try {
+                            Log.e("SENDREQUEST - BASKET", response.getString("success") + " " + url);
                             ((TextView) (findViewById(R.id.lblBasketCount))).setText(response.getString("CartItemCount"));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -189,14 +192,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void getBasketCount() {
         String url = "http://www.dr.com.tr/ApiCustomer/GetShoppingCartItemCount/?signedRequest=" + sessionId;
-        String body = "{}";
+        String body = "";
 
         sendRequest(EndPointType.BASKET_COUNT, url, body);
     }
 
     private void getCustomerInfo() {
         String url = "http://www.dr.com.tr/ApiCustomer/info/?signedRequest=" + sessionId;
-        String body = "{}";
+        String body = "";
         sendRequest(EndPointType.CUSTOMER_INFO, url, body);
     }
 
